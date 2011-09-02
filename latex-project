@@ -1,0 +1,58 @@
+#!/bin/bash
+
+LP_DIR=~/bin/.latex-project
+DP_DIR=~/Dropbox 
+DP_LP_DIR=$DP_DIR/trabalho
+
+LANGUAGE="american"
+
+if [ ! $1 ] || [ ${1:0:1} = "-" ]; then 
+    echo "Usage: $0 [project-name] -[rl] <language>";
+    exit; 
+fi
+
+# clone from remote
+if [ "$2" = "-c" ]; then 
+    git clone $DP_LP_DIR/$1.git; 
+    exit; 
+fi
+
+# create de directory
+mkdir $1
+cd $1
+CWD=`pwd`
+
+# copy files to that directory
+cp $LP_DIR/* .
+mv main.tex $1.tex
+ln -s ~/texmf/tex/mystyle.sty .
+ln -s ~/texmf/tex/ref.bib .
+
+# init git
+if [ "$2" = "-r" ]; then 
+    cp $LP_DIR/.gitignore .;
+    cd $DP_LP_DIR
+    mkdir $1.git
+    cd $1.git
+    git --bare init
+    cd $CWD
+    git init
+    git add .
+    git remote add origin $DP_LP_DIR/$1.git
+    git commit -m "First commit"
+    git push origin master
+    if [ "$3" = "-l" ]; then LANG="$4"; fi
+fi 
+
+# language
+if [ "$2" = "-l" ]; then LANG="$3"; fi
+if [ $LANG = "pt" ]; then 
+    LANGUAGE="brasileiro"; 
+    mkdir imagens
+else
+    mkdir images
+fi
+
+sed -e "s/<MASTER>/${1}/" $LP_DIR/dir-locals.el.tmp > dir-locals.el.tmp
+sed -e "s/<LANGUAGE>/${LANGUAGE}/" dir-locals.el.tmp > .dir-locals.el
+rm dir-locals.el.tmp

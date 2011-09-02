@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rm -f *.aux *.log  *.bbl *.blg *.idx *.out *.snm *.toc *.nav *.ilg *.ind *.lof *.lop *.lot *.fdb_latexmk;
+
+if [ "$1" = "-b" ]; then rm -f *~; fi
+if [ "$1" = "-a" ]; then rm -f *~ *.dvi *.pdf; fi

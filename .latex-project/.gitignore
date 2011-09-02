@@ -1,0 +1,5 @@
+# ignore emacs copies
+*~
+
+# ignore auxiliary files
+*.aux *.log  *.bbl *.blg *.idx *.out *.snm *.toc *.nav *.ilg *.ind *.lof *.lop *.lot *.dvi
